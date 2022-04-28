@@ -23,6 +23,17 @@ public class User
         
     }
 
+    public User(UserModel model)
+    {
+        FirstName = model.FirstName;
+        LastName = model.LastName;
+        Email = model.Email;
+        Password = model.Password;
+        Status = model.Status;
+        Phone = model.Phone;
+        Photo = model.Photo;
+    }
+
     public User(string fname, string lname, string email, string password, 
         UserStatus status = UserStatus.User, string phone= null, byte[] photo = null)
     {
@@ -47,7 +58,7 @@ public class User
             Password = this.Password,
             Status = this.Status,
             Phone = this.Phone,
-            Photo = this.Photo,
+            Photo = this.Photo
         };
     }
 }

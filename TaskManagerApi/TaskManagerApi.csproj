@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\TaskManager.Common.Models\TaskManager.Common.Models.csproj" />
   </ItemGroup>
 
 </Project>

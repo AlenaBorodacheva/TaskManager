@@ -1,4 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using TaskManagerApi.Models;
 using TaskManagerApi.Models.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +15,20 @@ builder.Services.AddSwaggerGen();
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = AuthOptions.ISSUER,
+        ValidateAudience = true,
+        ValidAudience = AuthOptions.AUDIENCE,
+        ValidateLifetime = true,
+        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+        ValidateIssuerSigningKey = true,
+    };
+});
 
 var app = builder.Build();
 
@@ -22,6 +39,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

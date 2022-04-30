@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Common.Models;
 using TaskManagerApi.Models;
@@ -8,6 +9,7 @@ namespace TaskManagerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]  // [AllowAnonymous - для исключения]
     public class UsersController : ControllerBase
     {
         private readonly ApplicationContext _db;
@@ -32,6 +34,7 @@ namespace TaskManagerApi.Controllers
             return BadRequest();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch("update/{id}")]
         public IActionResult UpdateUser(int id, [FromBody] UserModel userModel)
         {

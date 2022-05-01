@@ -28,13 +28,13 @@ public class ProjectsService : AbstractionService, ICommonService<ProjectModel>
     {
         return DoAction(delegate()
         {
-            Project newProject = _db.Projects.FirstOrDefault(p => p.Id == id);
-            newProject.Name = model.Name;
-            newProject.Description = model.Description;
-            newProject.Photo = model.Photo;
-            newProject.Status = model.Status;
-            newProject.AdminId = model.AdminId;
-            _db.Projects.Update(newProject);
+            Project project = _db.Projects.FirstOrDefault(p => p.Id == id);
+            project.Name = model.Name;
+            project.Description = model.Description;
+            project.Photo = model.Photo;
+            project.Status = model.Status;
+            project.AdminId = model.AdminId;
+            _db.Projects.Update(project);
             _db.SaveChanges();
         });
     }
@@ -51,8 +51,13 @@ public class ProjectsService : AbstractionService, ICommonService<ProjectModel>
 
     public ProjectModel Get(int id)
     {
-        Project project = _db.Projects.FirstOrDefault(p => p.Id == id);
-        return project?.ToDto();
+        Project project = _db.Projects.Include(p => p.AllUsers).FirstOrDefault(p => p.Id == id);
+        var projectModel = project?.ToDto();
+        if (projectModel != null)
+        {
+            projectModel.AllUsersIds = project.AllUsers.Select(u => u.Id).ToList();
+        }
+        return projectModel;
     }
 
     public async Task<IEnumerable<ProjectModel>> GetByUserId(int userId)
@@ -71,9 +76,9 @@ public class ProjectsService : AbstractionService, ICommonService<ProjectModel>
         return result;
     }
 
-    public IQueryable<ProjectModel> GetAll()
+    public IQueryable<CommonModel> GetAll()
     {
-       return _db.Projects.Select(p => p.ToDto());
+       return _db.Projects.Select(p => p.ToDto() as CommonModel);
     }
 
     public void AddUsersToProject(int id, List<int> userIds)

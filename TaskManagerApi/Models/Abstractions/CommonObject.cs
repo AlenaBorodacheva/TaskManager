@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaskManager.Common.Models;
+﻿using TaskManager.Common.Models;
 
 namespace TaskManagerApi.Models.Abstractions;
 
@@ -12,7 +7,7 @@ public class CommonObject
     public string Name { get; set; }
     public string Description { get; set; }
     public DateTime CreationDate { get; set; }
-    public byte[] Photo { get; set; }
+    public byte[]? Photo { get; set; }
 
     public CommonObject()
     {

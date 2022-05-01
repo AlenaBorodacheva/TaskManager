@@ -2,97 +2,72 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Common.Models;
-using TaskManagerApi.Models;
 using TaskManagerApi.Models.Data;
+using TaskManagerApi.Models.Services;
 
-namespace TaskManagerApi.Controllers
+namespace TaskManagerApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Authorize(Roles = "Admin")]  // [AllowAnonymous] - для исключения
+public class UsersController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    [Authorize(Roles = "Admin")]  // [AllowAnonymous - для исключения]
-    public class UsersController : ControllerBase
+    private readonly ApplicationContext _db;
+    private readonly UserService _userService;
+
+    public UsersController(ApplicationContext db)
     {
-        private readonly ApplicationContext _db;
+        _db = db;
+        _userService = new UserService(db);
+    }
 
-        public UsersController(ApplicationContext db)
+    [HttpPost]
+    public IActionResult CreateUser([FromBody] UserModel userModel)
+    {
+        if (userModel != null)
         {
-            _db = db;
+            bool result = _userService.Create(userModel);
+            return result ? Ok() : NotFound();
         }
 
-        [HttpPost("create")]
-        public IActionResult CreateUser([FromBody] UserModel userModel)
-        {
-            if (userModel != null)
-            {
-                User newUser = new User(userModel.FirstName, userModel.LastName, userModel.Email, 
-                    userModel.Password, userModel.Status, userModel.Phone, userModel.Photo);
-                _db.Users.Add(newUser);
-                _db.SaveChanges();
-                return Ok();
-            }
+        return BadRequest();
+    }
 
-            return BadRequest();
+    [Authorize(Roles = "Admin")]
+    [HttpPatch("{id}")]
+    public IActionResult UpdateUser(int id, [FromBody] UserModel userModel)
+    {
+        if (userModel != null)
+        {
+            bool result = _userService.Update(id, userModel);
+            return result ? Ok() : NotFound();
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPatch("update/{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] UserModel userModel)
+        return BadRequest();
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteUser(int id)
+    {
+        bool result = _userService.Delete(id);
+        return result ? Ok() : NotFound();
+    }
+
+    [HttpGet]
+    public async Task<IEnumerable<UserModel>> GetUsers()
+    {
+        return await _db.Users.Select(u => u.ToDto()).ToListAsync();
+    }
+
+    [HttpPost("all")]
+    public IActionResult CreateMultipleUsers([FromBody] List<UserModel> userModels)
+    {
+        if (userModels != null && userModels.Count > 0)
         {
-            if (userModel != null)
-            {
-                User userForUpdate = _db.Users.FirstOrDefault(u => u.Id == id);
-                if (userForUpdate != null)
-                {
-                    userForUpdate.FirstName = userModel.FirstName;
-                    userForUpdate.LastName = userModel.LastName;
-                    userForUpdate.Email = userModel.Email;
-                    userForUpdate.Password = userModel.Password;
-                    userForUpdate.Status = userModel.Status;
-                    userForUpdate.Phone = userModel.Phone;
-                    userForUpdate.Photo = userModel.Photo;
-                    _db.Users.Update(userForUpdate);
-                    _db.SaveChanges();
-                    return Ok();
-                }
-
-                return NotFound();
-            }
-
-            return BadRequest();
+            bool result = _userService.CreateMultipleUsers(userModels);
+            return result ? Ok() : NotFound();
         }
 
-        [HttpDelete("delete/{id}")]
-        public IActionResult DeleteUser(int id)
-        {
-            User userForDelete = _db.Users.FirstOrDefault(u => u.Id == id);
-            if (userForDelete != null)
-            {
-                _db.Users.Remove(userForDelete);
-                _db.SaveChanges();
-                return Ok();
-            }
-
-            return NotFound();
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<UserModel>> GetUsers()
-        {
-            return await _db.Users.Select(u => u.ToDto()).ToListAsync();
-        }
-
-        [HttpPost("create/all")]
-        public async Task<IActionResult> CreateMultipleUsers([FromBody] List<UserModel> userModels)
-        {
-            if (userModels != null && userModels.Count > 0)
-            {
-                var newUsers = userModels.Select(u => new User(u));
-                _db.Users.AddRange(newUsers);
-                await _db.SaveChangesAsync();
-                return Ok();
-            }
-
-            return BadRequest();
-        }
+        return BadRequest();
     }
 }

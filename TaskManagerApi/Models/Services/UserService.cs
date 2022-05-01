@@ -1,10 +1,12 @@
 ﻿using System.Security.Claims;
 using System.Text;
+using TaskManager.Common.Models;
+using TaskManagerApi.Models.Abstractions;
 using TaskManagerApi.Models.Data;
 
 namespace TaskManagerApi.Models.Services;
 
-public class UserService
+public class UserService : ICommonService<UserModel>
 {
     private readonly ApplicationContext _db;
 
@@ -54,5 +56,75 @@ public class UserService
         }
 
         return null;
+    }
+
+    public bool Create(UserModel model)
+    {
+        return DoAction(delegate()
+        {
+            User newUser = new User(model.FirstName, model.LastName, model.Email,
+                model.Password, model.Status, model.Phone, model.Photo);
+            _db.Users.Add(newUser);
+            _db.SaveChanges();
+        });
+    }
+
+    public bool Update(int id, UserModel model)
+    {
+        User userForUpdate = _db.Users.FirstOrDefault(u => u.Id == id);
+        if (userForUpdate != null)
+        {
+            return DoAction(delegate()
+            {
+                userForUpdate.FirstName = model.FirstName;
+                userForUpdate.LastName = model.LastName;
+                userForUpdate.Email = model.Email;
+                userForUpdate.Password = model.Password;
+                userForUpdate.Status = model.Status;
+                userForUpdate.Phone = model.Phone;
+                userForUpdate.Photo = model.Photo;
+                _db.Users.Update(userForUpdate);
+                _db.SaveChanges();
+            });
+        }
+
+        return false;
+    }
+
+    public bool Delete(int id)
+    {
+        User userForDelete = _db.Users.FirstOrDefault(u => u.Id == id);
+        if (userForDelete != null)
+        {
+            return DoAction(delegate ()
+            {
+                _db.Users.Remove(userForDelete);
+                _db.SaveChanges();
+            });
+        }
+        return false;
+    }
+
+    public bool CreateMultipleUsers(List<UserModel> userModels)
+    {
+        return DoAction(delegate()
+        {
+            var newUsers = userModels.Select(u => new User(u));
+            _db.Users.AddRange(newUsers);
+            _db.SaveChangesAsync();
+        });
+    }
+
+    private bool DoAction(Action action)
+    {
+        try
+        {
+            action.Invoke();
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
     }
 }

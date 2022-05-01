@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManager.Common.Models;
 
 namespace TaskManagerApi.Models.Abstractions;
 
@@ -16,5 +17,13 @@ public class CommonObject
     public CommonObject()
     {
         CreationDate = DateTime.Now;
+    }
+
+    public CommonObject(CommonModel model)
+    {
+        Name = model.Name;
+        Description = model.Description;
+        CreationDate = model.CreationDate;
+        Photo = model.Photo;
     }
 }

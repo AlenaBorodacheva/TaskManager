@@ -12,7 +12,7 @@ using TaskManagerApi.Models.Data;
 namespace TaskManagerApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20220427212814_Initial")]
+    [Migration("20220501173756_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,7 +69,6 @@ namespace TaskManagerApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Photo")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("ProjectId")
@@ -107,7 +106,6 @@ namespace TaskManagerApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Photo")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("Status")
@@ -170,7 +168,6 @@ namespace TaskManagerApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<byte[]>("File")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
@@ -178,7 +175,6 @@ namespace TaskManagerApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("Photo")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("StartDate")

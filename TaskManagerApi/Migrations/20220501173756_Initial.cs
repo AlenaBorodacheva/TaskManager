@@ -60,7 +60,7 @@ namespace TaskManagerApi.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,7 +85,7 @@ namespace TaskManagerApi.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -136,7 +136,7 @@ namespace TaskManagerApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    File = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    File = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     DeskId = table.Column<int>(type: "int", nullable: false),
                     Column = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatorId = table.Column<int>(type: "int", nullable: true),
@@ -144,7 +144,7 @@ namespace TaskManagerApi.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -41,7 +41,7 @@ public class DesksController : ControllerBase
         return desk == null ? NotFound() : Ok(desk);
     }
 
-    [HttpGet("project/{projectId}")]
+    [HttpGet("project")]
     public async Task<IEnumerable<CommonModel>> GetProjectDesks(int projectId)
     {
         var user = _usersService.GetUser(HttpContext.User.Identity.Name);
@@ -61,7 +61,7 @@ public class DesksController : ControllerBase
             if (deskModel != null)
             {
                 bool result = _desksService.Create(deskModel);
-                return result ? Ok(result) : NotFound();
+                return result ? Ok() : NotFound();
             }
 
             return BadRequest();
@@ -79,7 +79,7 @@ public class DesksController : ControllerBase
             if (deskModel != null)
             {
                 bool result = _desksService.Update(id, deskModel);
-                return result ? Ok(result) : NotFound();
+                return result ? Ok() : NotFound();
             }
 
             return BadRequest();
@@ -92,6 +92,6 @@ public class DesksController : ControllerBase
     public IActionResult Delete(int id)
     {
         bool result = _desksService.Delete(id);
-        return result ? Ok(result) : NotFound();
+        return result ? Ok() : NotFound();
     }
 }

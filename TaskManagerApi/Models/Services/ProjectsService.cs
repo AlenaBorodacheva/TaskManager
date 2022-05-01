@@ -51,11 +51,15 @@ public class ProjectsService : AbstractionService, ICommonService<ProjectModel>
 
     public ProjectModel Get(int id)
     {
-        Project project = _db.Projects.Include(p => p.AllUsers).FirstOrDefault(p => p.Id == id);
+        Project project = _db.Projects
+            .Include(p => p.AllUsers)
+            .Include(p => p.AllDesks)
+            .FirstOrDefault(p => p.Id == id);
         var projectModel = project?.ToDto();
         if (projectModel != null)
         {
             projectModel.AllUsersIds = project.AllUsers.Select(u => u.Id).ToList();
+            projectModel.AllDesksIds = project.AllDesks.Select(u => u.Id).ToList();
         }
         return projectModel;
     }
@@ -88,7 +92,10 @@ public class ProjectsService : AbstractionService, ICommonService<ProjectModel>
         foreach (var userId in userIds)
         {
             var user = _db.Users.FirstOrDefault(u => u.Id == userId);
-            project.AllUsers.Add(user);
+            if (project.AllUsers.Contains(user) == false)
+            {
+                project.AllUsers.Add(user);
+            }
         }
 
         _db.SaveChanges();

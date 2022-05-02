@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TaskManager.Api.Models;
+using TaskManager.Api.Models.Data;
+using TaskManager.Api.Models.Services;
 using TaskManager.Common.Models;
-using TaskManagerApi.Models;
-using TaskManagerApi.Models.Data;
-using TaskManagerApi.Models.Services;
 
-namespace TaskManagerApi.Controllers;
+namespace TaskManager.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

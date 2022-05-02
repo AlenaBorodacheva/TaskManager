@@ -1,4 +1,4 @@
-﻿namespace TaskManagerApi.Models.Abstractions;
+﻿namespace TaskManager.Api.Models.Abstractions;
 
 public interface ICommonService<T>
 {

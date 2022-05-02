@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using TaskManagerApi.Models;
-using TaskManagerApi.Models.Data;
+using TaskManager.Api.Models;
+using TaskManager.Api.Models.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

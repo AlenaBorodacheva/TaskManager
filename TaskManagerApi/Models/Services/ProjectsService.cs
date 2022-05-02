@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TaskManager.Api.Models.Abstractions;
+using TaskManager.Api.Models.Data;
 using TaskManager.Common.Models;
-using TaskManagerApi.Models.Abstractions;
-using TaskManagerApi.Models.Data;
 
-namespace TaskManagerApi.Models.Services;
+namespace TaskManager.Api.Models.Services;
 
 public class ProjectsService : AbstractionService, ICommonService<ProjectModel>
 {

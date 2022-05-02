@@ -1,8 +1,8 @@
-﻿using TaskManager.Common.Models;
-using TaskManagerApi.Models.Abstractions;
-using TaskManagerApi.Models.Data;
+﻿using TaskManager.Api.Models.Abstractions;
+using TaskManager.Api.Models.Data;
+using TaskManager.Common.Models;
 
-namespace TaskManagerApi.Models.Services;
+namespace TaskManager.Api.Models.Services;
 
 public class TasksService : AbstractionService, ICommonService<TaskModel>
 {

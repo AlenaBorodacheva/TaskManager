@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagerApi", "TaskManagerApi\TaskManagerApi.csproj", "{392A3559-D09E-43FE-BAEF-831CE10EDFA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Api", "TaskManagerApi\TaskManager.Api.csproj", "{392A3559-D09E-43FE-BAEF-831CE10EDFA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Common.Models", "TaskManager.Common.Models\TaskManager.Common.Models.csproj", "{D7B17337-A982-4AF3-AC12-70AE5729532A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManager.Common.Models", "TaskManager.Common.Models\TaskManager.Common.Models.csproj", "{D7B17337-A982-4AF3-AC12-70AE5729532A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.Client", "TaskManager.Client\TaskManager.Client.csproj", "{47AA3310-D570-495A-864F-65E75592115B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager.ClientTests", "TaskManager.ClientTests\TaskManager.ClientTests.csproj", "{F89C6F5C-514A-4264-BF76-5F470961C55D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{D7B17337-A982-4AF3-AC12-70AE5729532A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7B17337-A982-4AF3-AC12-70AE5729532A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7B17337-A982-4AF3-AC12-70AE5729532A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47AA3310-D570-495A-864F-65E75592115B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47AA3310-D570-495A-864F-65E75592115B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47AA3310-D570-495A-864F-65E75592115B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47AA3310-D570-495A-864F-65E75592115B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F89C6F5C-514A-4264-BF76-5F470961C55D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F89C6F5C-514A-4264-BF76-5F470961C55D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F89C6F5C-514A-4264-BF76-5F470961C55D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F89C6F5C-514A-4264-BF76-5F470961C55D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

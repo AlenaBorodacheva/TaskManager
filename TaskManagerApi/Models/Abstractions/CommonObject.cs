@@ -1,6 +1,6 @@
 ﻿using TaskManager.Common.Models;
 
-namespace TaskManagerApi.Models.Abstractions;
+namespace TaskManager.Api.Models.Abstractions;
 
 public class CommonObject
 {

@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
+using TaskManager.Api.Models.Abstractions;
 using TaskManager.Common.Models;
-using TaskManagerApi.Models.Abstractions;
 
-namespace TaskManagerApi.Models;
+namespace TaskManager.Api.Models;
 
 public class Desk : CommonObject
 {

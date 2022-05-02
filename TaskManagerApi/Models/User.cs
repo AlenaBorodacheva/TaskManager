@@ -1,6 +1,6 @@
 ﻿using TaskManager.Common.Models;
 
-namespace TaskManagerApi.Models;
+namespace TaskManager.Api.Models;
 
 public class User
 {

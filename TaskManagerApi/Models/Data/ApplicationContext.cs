@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskManager.Common.Models;
 
-namespace TaskManagerApi.Models.Data;
+namespace TaskManager.Api.Models.Data;
 
 public class ApplicationContext : DbContext
 {

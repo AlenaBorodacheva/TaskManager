@@ -1,7 +1,7 @@
-﻿using TaskManager.Common.Models;
-using TaskManagerApi.Models.Abstractions;
+﻿using TaskManager.Api.Models.Abstractions;
+using TaskManager.Common.Models;
 
-namespace TaskManagerApi.Models;
+namespace TaskManager.Api.Models;
 
 public class Task : CommonObject
 {

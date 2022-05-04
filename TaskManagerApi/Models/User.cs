@@ -58,7 +58,8 @@ public class User
             Password = this.Password,
             Status = this.Status,
             Phone = this.Phone,
-            Photo = this.Photo
-        };
+            Photo = this.Photo,
+            RegistraionDate = DateTime.Now
+    };
     }
 }

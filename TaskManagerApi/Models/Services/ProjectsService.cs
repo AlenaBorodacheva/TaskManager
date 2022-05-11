@@ -33,7 +33,7 @@ public class ProjectsService : AbstractionService, ICommonService<ProjectModel>
             project.Description = model.Description;
             project.Photo = model.Photo;
             project.Status = model.Status;
-            project.AdminId = model.AdminId;
+            //project.AdminId = model.AdminId;
             _db.Projects.Update(project);
             _db.SaveChanges();
         });

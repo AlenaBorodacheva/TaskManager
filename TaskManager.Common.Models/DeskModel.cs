@@ -7,4 +7,17 @@ public class DeskModel : CommonModel
     public int AdminId { get; set; }
     public int ProjectId { get; set; }
     public List<int>? TasksIds { get; set; }
+
+    public DeskModel()
+    {
+        
+    }
+
+    public DeskModel(string name, string description, bool isPrivate, string[] columns)
+    {
+        Name = name;
+        Description = description;
+        IsPrivate = isPrivate;
+        Columns = columns;
+    }
 }

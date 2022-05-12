@@ -35,9 +35,7 @@ public class TasksService : AbstractionService, ICommonService<TaskModel>
             task.Photo = model.Photo;
             task.StartDate = model.StartDate;
             task.EndDate = model.EndDate;
-            task.DeskId = model.DeskId;
             task.Column = model.Column;
-            task.CreatorId = model.CreatorId;
             task.ExecutorId = model.ExecutorId;
             task.File = model.File;
            

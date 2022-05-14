@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using Prism.Commands;
 using Prism.Mvvm;
 using TaskManager.Client.Models;
+using TaskManager.Client.Views;
 using TaskManager.Client.Views.Pages;
 using TaskManager.Common.Models;
 
@@ -30,6 +31,8 @@ public class MainWindowViewModel : BindableBase
     private readonly string _userDesksBtnName = "My desks";
     private readonly string _userProjectsBtnName = "My projects";
     private readonly string _manageUsersBtnName = "Users";
+
+    private Window _currentWindow;
 
     private Dictionary<string, DelegateCommand> _navigationButtons = new Dictionary<string, DelegateCommand>();
 
@@ -93,10 +96,11 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
 
-    public MainWindowViewModel(AuthToken token, UserModel currentUser)
+    public MainWindowViewModel(AuthToken token, UserModel currentUser, Window? currentWindow = null)
     {
         AuthToken = token;
         CurrentUser = currentUser;
+        _currentWindow = currentWindow;
 
         OpenMyInfoPageCommand = new DelegateCommand(OpenMyInfoPage);
         NavigationButtons.Add(_userInfoBtnName, OpenMyInfoPageCommand);
@@ -118,6 +122,8 @@ public class MainWindowViewModel : BindableBase
 
         LogoutCommand = new DelegateCommand(Logout);
         NavigationButtons.Add(_logoutBtnName, LogoutCommand);
+
+        OpenMyInfoPage();
     }
     
     #region METHODS
@@ -149,7 +155,13 @@ public class MainWindowViewModel : BindableBase
 
     private void Logout()
     {
-        ShowMessage(_logoutBtnName);
+        var question = MessageBox.Show("Are you sure", "Logout", MessageBoxButton.YesNo);
+        if (question == MessageBoxResult.Yes && _currentWindow != null)
+        {
+            Login login = new Login();
+            login.Show();
+            _currentWindow.Close();
+        }
     }
 
     private void OpenUsersManagement()

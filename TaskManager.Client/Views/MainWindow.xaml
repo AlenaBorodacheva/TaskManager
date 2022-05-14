@@ -27,5 +27,15 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Border BorderThickness="0,0,0,2" Style="{StaticResource commonBorder}"/>
+            <TextBlock Text="{Binding SelectedPageName}" Style="{StaticResource headerTextBlock}"/>
+            <Frame Grid.Row="1" NavigationUIVisibility="Hidden" Content="{Binding SelectedPage}"/>
+        </Grid>
     </Grid>
 </Window>

@@ -51,7 +51,7 @@
     </Style>
 
     <Style TargetType="TextBlock" x:Key="commonTextBlock">
-        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="FontStyle" Value="{StaticResource commonFontStyle}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -61,5 +61,13 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="{StaticResource commonGrayColor}"/>
         <Setter Property="Margin" Value="2"/>
+    </Style>
+
+    <Style TargetType="Border" x:Key="commonBorder">
+        <Setter Property="BorderBrush" Value="{StaticResource commonGrayColor}"/>
+    </Style>
+
+    <Style TargetType="TextBlock" x:Key="headerTextBlock" BasedOn="{StaticResource commonTextBlock}">
+        <Setter Property="FontSize" Value="20"/>
     </Style>
 </ResourceDictionary>

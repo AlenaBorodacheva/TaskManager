@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using Prism.Commands;
 using Prism.Mvvm;
 using TaskManager.Client.Models;
+using TaskManager.Client.Views.Pages;
 using TaskManager.Common.Models;
 
 namespace TaskManager.Client.ViewModels;
@@ -65,6 +67,30 @@ public class MainWindowViewModel : BindableBase
         }
     }
 
+    private string _selectedPageName;
+
+    public string SelectedPageName
+    {
+        get => _selectedPageName;
+        set
+        {
+            _selectedPageName = value;
+            RaisePropertyChanged(nameof(SelectedPageName));
+        }
+    }
+
+    private Page _selectedPage;
+
+    public Page SelectedPage
+    {
+        get => _selectedPage;
+        set
+        {
+            _selectedPage = value;
+            RaisePropertyChanged(nameof(SelectedPage));
+        }
+    }
+
     #endregion
 
     public MainWindowViewModel(AuthToken token, UserModel currentUser)
@@ -93,28 +119,31 @@ public class MainWindowViewModel : BindableBase
         LogoutCommand = new DelegateCommand(Logout);
         NavigationButtons.Add(_logoutBtnName, LogoutCommand);
     }
-
     
-
     #region METHODS
 
     private void OpenMyInfoPage()
     {
-        ShowMessage(_userInfoBtnName);
+        var page = new UserInfoPage();
+        page.DataContext = this;
+        OpenPage(page, _userInfoBtnName);
     }
 
     private void OpenDesksPage()
     {
+        SelectedPageName = _userDesksBtnName;
         ShowMessage(_userDesksBtnName);
     }
 
     private void OpenProjectsPage()
     {
+        SelectedPageName = _userProjectsBtnName;
         ShowMessage(_userProjectsBtnName);
     }
 
     private void OpenTasksPage()
     {
+        SelectedPageName = _userTasksBtnName;
         ShowMessage(_userTasksBtnName);
     }
 
@@ -125,6 +154,7 @@ public class MainWindowViewModel : BindableBase
 
     private void OpenUsersManagement()
     {
+        SelectedPageName = _manageUsersBtnName;
         ShowMessage(_manageUsersBtnName);
     }
 
@@ -133,5 +163,11 @@ public class MainWindowViewModel : BindableBase
     private void ShowMessage(string message)
     {
         MessageBox.Show(message);
+    }
+
+    private void OpenPage(Page page, string pageName)
+    {
+        SelectedPageName = pageName;
+        SelectedPage = page;
     }
 }

@@ -8,8 +8,6 @@
         Title="MainWindow" 
         Height="450" Width="800"
         MinHeight="200" MinWidth="300"
-        xmlns:prism="http://prismlibrary.com/"
-        prism:ViewModelLocator.AutoWireViewModel="True"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>

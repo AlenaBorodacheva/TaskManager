@@ -156,6 +156,7 @@ public class LoginViewModel : BindableBase
     private void OpenMainWindow()
     {
         MainWindow window = new MainWindow();
+        window.DataContext = new MainWindowViewModel(AuthToken, CurrentUser);
         window.Show();
         _currentWindow.Close();
     }

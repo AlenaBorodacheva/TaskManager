@@ -31,6 +31,12 @@ public class UsersRequestService : CommonRequestService
         return JsonConvert.DeserializeObject<List<UserModel>>(responce);
     }
 
+    public UserModel GetUserById(AuthToken token, int? userId)
+    {
+        string responce = GetDataByUrl(HttpMethod.Get, _usersControllerUrl + $"/{userId}", token);
+        return JsonConvert.DeserializeObject<UserModel>(responce);
+    }
+
     public UserModel GetCurrentUser(AuthToken token)
     {
         string responce = GetDataByUrl(HttpMethod.Get, HOST + "account/info", token);

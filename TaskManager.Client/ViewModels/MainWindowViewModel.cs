@@ -131,8 +131,7 @@ public class MainWindowViewModel : BindableBase
     private void OpenMyInfoPage()
     {
         var page = new UserInfoPage();
-        page.DataContext = this;
-        OpenPage(page, _userInfoBtnName);
+        OpenPage(page, _userInfoBtnName, this);
     }
 
     private void OpenDesksPage()
@@ -149,8 +148,8 @@ public class MainWindowViewModel : BindableBase
 
     private void OpenTasksPage()
     {
-        SelectedPageName = _userTasksBtnName;
-        ShowMessage(_userTasksBtnName);
+        var page = new UserTasksPage();
+        OpenPage(page, _userTasksBtnName, new UserTasksPageViewModel(_authToken));
     }
 
     private void Logout()
@@ -177,9 +176,10 @@ public class MainWindowViewModel : BindableBase
         MessageBox.Show(message);
     }
 
-    private void OpenPage(Page page, string pageName)
+    private void OpenPage(Page page, string pageName, BindableBase viewModel)
     {
         SelectedPageName = pageName;
         SelectedPage = page;
+        SelectedPage.DataContext = viewModel;
     }
 }

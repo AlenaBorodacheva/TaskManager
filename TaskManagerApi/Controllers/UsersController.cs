@@ -53,6 +53,13 @@ public class UsersController : ControllerBase
         return result ? Ok() : NotFound();
     }
 
+    [HttpGet("{id}")]
+    public ActionResult<UserModel> GetUserById(int id)
+    {
+        var result = _usersService.Get(id);
+        return User == null? NotFound() : Ok(result);
+    }
+
     [HttpGet]
     public async Task<IEnumerable<UserModel>> GetUsers()
     {

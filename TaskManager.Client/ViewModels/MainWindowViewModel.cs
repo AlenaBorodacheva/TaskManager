@@ -17,12 +17,12 @@ public class MainWindowViewModel : BindableBase
 
     #region COMMANDS
 
-    public DelegateCommand OpenMyInfoPageCommand;
-    public DelegateCommand OpenProjectsPageCommand;
-    public DelegateCommand OpenDesksPageCommand;
-    public DelegateCommand OpenTasksPageCommand;
-    public DelegateCommand LogoutCommand;
-    public DelegateCommand OpenUsersManagementCommand;
+    public DelegateCommand OpenMyInfoPageCommand { get; private set; }
+    public DelegateCommand OpenProjectsPageCommand { get; private set; }
+    public DelegateCommand OpenDesksPageCommand { get; private set; }
+    public DelegateCommand OpenTasksPageCommand { get; private set; }
+    public DelegateCommand LogoutCommand { get; private set; }
+    public DelegateCommand OpenUsersManagementCommand { get; private set; }
 
     #endregion
 

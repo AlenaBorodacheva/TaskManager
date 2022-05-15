@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using Prism.Commands;
 using Prism.Mvvm;
 using TaskManager.Client.Models;
+using TaskManager.Client.Services;
 using TaskManager.Client.Views;
 using TaskManager.Client.Views.Pages;
 using TaskManager.Common.Models;
@@ -12,6 +13,8 @@ namespace TaskManager.Client.ViewModels;
 
 public class MainWindowViewModel : BindableBase
 {
+    private CommonViewService _viewService;
+
     #region COMMANDS
 
     public DelegateCommand OpenMyInfoPageCommand;
@@ -98,6 +101,7 @@ public class MainWindowViewModel : BindableBase
 
     public MainWindowViewModel(AuthToken token, UserModel currentUser, Window? currentWindow = null)
     {
+        _viewService = new CommonViewService();
         AuthToken = token;
         CurrentUser = currentUser;
         _currentWindow = currentWindow;
@@ -137,13 +141,13 @@ public class MainWindowViewModel : BindableBase
     private void OpenDesksPage()
     {
         SelectedPageName = _userDesksBtnName;
-        ShowMessage(_userDesksBtnName);
+        _viewService.ShowMessage(_userDesksBtnName);
     }
 
     private void OpenProjectsPage()
     {
-        SelectedPageName = _userProjectsBtnName;
-        ShowMessage(_userProjectsBtnName);
+        var page = new ProjectsPage();
+        OpenPage(page, _userProjectsBtnName, new ProjectsPageNewModel(AuthToken));
     }
 
     private void OpenTasksPage()
@@ -166,16 +170,11 @@ public class MainWindowViewModel : BindableBase
     private void OpenUsersManagement()
     {
         SelectedPageName = _manageUsersBtnName;
-        ShowMessage(_manageUsersBtnName);
+        _viewService.ShowMessage(_manageUsersBtnName);
     }
 
     #endregion
-
-    private void ShowMessage(string message)
-    {
-        MessageBox.Show(message);
-    }
-
+    
     private void OpenPage(Page page, string pageName, BindableBase viewModel)
     {
         SelectedPageName = pageName;

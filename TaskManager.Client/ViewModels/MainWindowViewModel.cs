@@ -147,7 +147,7 @@ public class MainWindowViewModel : BindableBase
     private void OpenProjectsPage()
     {
         var page = new ProjectsPage();
-        OpenPage(page, _userProjectsBtnName, new ProjectsPageNewModel(AuthToken));
+        OpenPage(page, _userProjectsBtnName, new ProjectsPageViewModel(AuthToken));
     }
 
     private void OpenTasksPage()

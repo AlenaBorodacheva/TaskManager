@@ -25,10 +25,17 @@ public class ProjectsPageViewModel : BindableBase
     public DelegateCommand CreateOrUpdateProjectCommand { get; private set; }
     public DelegateCommand DeleteProjectCommand { get; private set; }
     public DelegateCommand SelectPhotoForProjectCommand { get; private set; }
+    public DelegateCommand AddUsersToProjectCommand { get; private set; }
+    public DelegateCommand OpenNewUsersToProjectCommand { get; private set; }
 
     #endregion
 
     #region PROPERTIES
+
+    public UserModel CurrentUser
+    {
+        get => _usersRequestService.GetCurrentUser(_token);
+    }
 
     private ClientAction _typeActionWithProject;
 
@@ -64,7 +71,7 @@ public class ProjectsPageViewModel : BindableBase
             _selectedProject = value;
             RaisePropertyChanged(nameof(SelectedProject));
 
-            if (SelectedProject.Model.AllUsersIds != null && SelectedProject.Model.AllUsersIds.Count > 0)
+            if (SelectedProject?.Model.AllUsersIds != null && SelectedProject?.Model.AllUsersIds.Count > 0)
             {
                 ProjectUsers = SelectedProject.Model.AllUsersIds?
                     .Select(userId => _usersRequestService.GetUserById(_token, userId)).ToList();
@@ -88,6 +95,24 @@ public class ProjectsPageViewModel : BindableBase
         }
     }
 
+    public List<UserModel> NewUsersForSelectedProject
+    {
+        get => _usersRequestService.GetAllUsers(_token)
+            .Where(user => ProjectUsers.Any(u => u.Id == user.Id) == false).ToList();
+    }
+
+    private List<UserModel> _selectedUsersForProject = new List<UserModel>();
+
+    public List<UserModel> SelectedUsersForProject
+    {
+        get => _selectedUsersForProject;
+        set
+        {
+            _selectedUsersForProject = value;
+            RaisePropertyChanged(nameof(SelectedUsersForProject));
+        }
+    }
+
     #endregion
 
     public ProjectsPageViewModel(AuthToken token)
@@ -97,13 +122,16 @@ public class ProjectsPageViewModel : BindableBase
         _projectsRequestService = new ProjectsRequestService();
 
         _token = token;
-        UserProjects = GetProjectsToClient();
+        UpdatePage();
+
         OpenNewProjectCommand = new DelegateCommand(OpenNewProject);
         OpenUpdateProjectCommand = new DelegateCommand<object>(OpenUpdateProject);
         ShowProjectInfoCommand = new DelegateCommand<object>(ShowProjectInfo);
-        CreateOrUpdateProjectCommand = new DelegateCommand(CreateOrUpdateOrDeleteProject);
+        CreateOrUpdateProjectCommand = new DelegateCommand(CreateOrUpdateProject);
         DeleteProjectCommand = new DelegateCommand(DeleteProject);
         SelectPhotoForProjectCommand = new DelegateCommand(SelectPhotoForProject);
+        AddUsersToProjectCommand = new DelegateCommand(AddUsersToProject);
+        OpenNewUsersToProjectCommand = new DelegateCommand(OpenNewUsersToProject);
     }
 
     #region METHODS
@@ -144,7 +172,7 @@ public class ProjectsPageViewModel : BindableBase
         }
     }
 
-    public void CreateOrUpdateOrDeleteProject()
+    public void CreateOrUpdateProject()
     {
         if (TypeActionWithProject == ClientAction.Create)
         {
@@ -156,8 +184,7 @@ public class ProjectsPageViewModel : BindableBase
             UpdateProject();
         }
 
-        UserProjects = GetProjectsToClient();
-        _viewService.CurrentOpenWindow?.Close();
+        UpdatePage();
     }
 
     private void CreateProject()
@@ -177,12 +204,13 @@ public class ProjectsPageViewModel : BindableBase
         var resultAction = _projectsRequestService.DeleteProject(_token, SelectedProject.Model.Id);
         _viewService.ShowActionResult(resultAction, "\nProject is deleted");
 
-        UserProjects = GetProjectsToClient();
+        UpdatePage();
         _viewService.CurrentOpenWindow?.Close();
     }
 
     private List<ModelClient<ProjectModel>> GetProjectsToClient()
     {
+        _viewService.CurrentOpenWindow?.Close();
         return _projectsRequestService.GetAllProjects(_token).Select(project => new ModelClient<ProjectModel>(project)).ToList();
     }
 
@@ -190,6 +218,33 @@ public class ProjectsPageViewModel : BindableBase
     {
         _viewService.SetPhotoForObject(SelectedProject.Model);
         SelectedProject = new ModelClient<ProjectModel>(SelectedProject.Model);
+    }
+
+    private void AddUsersToProject()
+    {
+        if (SelectedUsersForProject == null || SelectedUsersForProject?.Count == 0)
+        {
+            _viewService.ShowMessage("Select users");
+            return;
+        }
+        var resultAction = _projectsRequestService.AddUsersToProject(_token, SelectedProject.Model.Id,
+            SelectedUsersForProject.Select(user => user.Id).ToList());
+        _viewService.ShowActionResult(resultAction, "\nNew users are added to project");
+
+        UpdatePage();
+    }
+
+    private void OpenNewUsersToProject()
+    {
+        var wnd = new AddUsersToProjectWindow();
+        _viewService.OpenWindow(wnd, this);
+    }
+
+    private void UpdatePage()
+    {
+        UserProjects = GetProjectsToClient();
+        SelectedProject = null;
+        SelectedUsersForProject = new List<UserModel>();
     }
 
     #endregion

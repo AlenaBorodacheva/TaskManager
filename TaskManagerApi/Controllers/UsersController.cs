@@ -32,8 +32,7 @@ public class UsersController : ControllerBase
 
         return BadRequest();
     }
-
-    [Authorize(Roles = "Admin")]
+    
     [HttpPatch("{id}")]
     public IActionResult UpdateUser(int id, [FromBody] UserModel userModel)
     {
@@ -53,6 +52,8 @@ public class UsersController : ControllerBase
         return result ? Ok() : NotFound();
     }
 
+    [AllowAnonymous]
+    [Authorize]
     [HttpGet("{id}")]
     public ActionResult<UserModel> GetUserById(int id)
     {
@@ -60,6 +61,8 @@ public class UsersController : ControllerBase
         return User == null? NotFound() : Ok(result);
     }
 
+    [AllowAnonymous]
+    [Authorize]
     [HttpGet]
     public async Task<IEnumerable<UserModel>> GetUsers()
     {

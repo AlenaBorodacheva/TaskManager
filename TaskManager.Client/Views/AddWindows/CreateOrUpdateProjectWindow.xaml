@@ -7,7 +7,8 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:commonModels="clr-namespace:TaskManager.Common.Models;assembly=TaskManager.Common.Models"
         mc:Ignorable="d"
-        Title="CreateOrUpdateProjectWindow" Height="450" Width="350">
+        Title="CreateOrUpdateProjectWindow" Height="450" Width="350"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
@@ -53,7 +54,8 @@
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
                     <Image Grid.Row="0" Source="{Binding SelectedProject.Image}"/>
-                    <Button Grid.Row="1" Content="Select" Command="{Binding}" Style="{StaticResource commonButton}"/>
+                    <Button Grid.Row="1" Content="Select" Command="{Binding SelectPhotoForProjectCommand}" 
+                            Style="{StaticResource commonButton}"/>
                 </Grid>
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Status: " 
                            Style="{StaticResource commonTextBlock}" HorizontalAlignment="Right"/>

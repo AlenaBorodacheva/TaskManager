@@ -147,7 +147,7 @@ public class MainWindowViewModel : BindableBase
     private void OpenProjectsPage()
     {
         var page = new ProjectsPage();
-        OpenPage(page, _userProjectsBtnName, new ProjectsPageViewModel(AuthToken));
+        OpenPage(page, _userProjectsBtnName, new ProjectsPageViewModel(AuthToken, this));
     }
 
     private void OpenTasksPage()
@@ -175,7 +175,7 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
     
-    private void OpenPage(Page page, string pageName, BindableBase viewModel)
+    public void OpenPage(Page page, string pageName, BindableBase viewModel)
     {
         SelectedPageName = pageName;
         SelectedPage = page;

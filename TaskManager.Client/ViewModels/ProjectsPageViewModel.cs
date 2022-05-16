@@ -6,6 +6,7 @@ using Prism.Mvvm;
 using TaskManager.Client.Models;
 using TaskManager.Client.Services;
 using TaskManager.Client.Views.AddWindows;
+using TaskManager.Client.Views.Pages;
 using TaskManager.Common.Models;
 
 namespace TaskManager.Client.ViewModels;
@@ -16,6 +17,7 @@ public class ProjectsPageViewModel : BindableBase
     private UsersRequestService _usersRequestService;
     private ProjectsRequestService _projectsRequestService;
     private CommonViewService _viewService;
+    private MainWindowViewModel _mainWindowVm;
 
     #region COMMANDS
 
@@ -27,6 +29,7 @@ public class ProjectsPageViewModel : BindableBase
     public DelegateCommand SelectPhotoForProjectCommand { get; private set; }
     public DelegateCommand AddUsersToProjectCommand { get; private set; }
     public DelegateCommand OpenNewUsersToProjectCommand { get; private set; }
+    public DelegateCommand OpenProjectDesksPageCommand { get; private set; }
 
     #endregion
 
@@ -115,11 +118,12 @@ public class ProjectsPageViewModel : BindableBase
 
     #endregion
 
-    public ProjectsPageViewModel(AuthToken token)
+    public ProjectsPageViewModel(AuthToken token, MainWindowViewModel mainWindowVM)
     {
         _viewService = new CommonViewService();
         _usersRequestService = new UsersRequestService();
         _projectsRequestService = new ProjectsRequestService();
+        _mainWindowVm = mainWindowVM;
 
         _token = token;
         UpdatePage();
@@ -132,6 +136,7 @@ public class ProjectsPageViewModel : BindableBase
         SelectPhotoForProjectCommand = new DelegateCommand(SelectPhotoForProject);
         AddUsersToProjectCommand = new DelegateCommand(AddUsersToProject);
         OpenNewUsersToProjectCommand = new DelegateCommand(OpenNewUsersToProject);
+        OpenProjectDesksPageCommand = new DelegateCommand(OpenProjectDesksPage);
     }
 
     #region METHODS
@@ -245,6 +250,15 @@ public class ProjectsPageViewModel : BindableBase
         UserProjects = GetProjectsToClient();
         SelectedProject = null;
         SelectedUsersForProject = new List<UserModel>();
+    }
+
+    private void OpenProjectDesksPage()
+    {
+        if (SelectedProject?.Model != null)
+        {
+            var page = new ProjectDesksPage();
+            _mainWindowVm.OpenPage(page, $"Desks of {SelectedProject.Model.Name}", new ProjectDesksPageViewModel(_token, SelectedProject.Model));
+        }
     }
 
     #endregion

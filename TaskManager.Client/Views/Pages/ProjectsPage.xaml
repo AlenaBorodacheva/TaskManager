@@ -51,11 +51,21 @@
                                     <Button Content="Open" Command="{Binding Path=DataContext.ShowProjectInfoCommand, 
                                         RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Path=Model.Id}" 
                                             Style="{StaticResource commonButton}"/>
-                                    
-                                    <Button Content="Edit" Command="{Binding Path=DataContext.OpenUpdateProjectCommand,
-                                        RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Path=Model.Id}"
-                                            Style="{StaticResource commonButton}"/>
 
+                                    <Button Content="Edit" Command="{Binding Path=DataContext.OpenUpdateProjectCommand,
+                                        RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding Path=Model.Id}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource commonButton}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CurrentUser.Status}" Value="User">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                        <Setter Property="Height" Value="0"/>
+                                                        <Setter Property="Visibility" Value="Hidden"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
@@ -77,7 +87,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -98,8 +108,9 @@
                     </Style>
                 </Button.Style>
             </Button>
-            
-            <Button Grid.Row="3" Content="Desks" Command="{Binding}" Style="{StaticResource commonButton}"/>
+
+            <Button Grid.Row="3" Content="Desks" Command="{Binding OpenProjectDesksPageCommand}" 
+                    Style="{StaticResource commonButton}"/>
             <ListBox Grid.Row="4" ItemsSource="{Binding ProjectUsers}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

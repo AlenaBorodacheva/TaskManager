@@ -26,6 +26,7 @@ public class Desk : CommonObject
         AdminId = deskModel.AdminId;
         IsPrivate = deskModel.IsPrivate;
         ProjectId = deskModel.ProjectId;
+        Photo = deskModel.Photo;
         if (deskModel.Columns.Any())
         {
             Columns = JsonConvert.SerializeObject(deskModel.Columns);

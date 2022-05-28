@@ -12,20 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TaskManager.Client.Models;
 
-namespace TaskManager.Client.Views.Pages
+namespace TaskManager.Client.Views.Components
 {
     /// <summary>
-    /// Логика взаимодействия для DeskTasksPage.xaml
+    /// Логика взаимодействия для TaskControl.xaml
     /// </summary>
-    public partial class DeskTasksPage : Page
+    public partial class TaskControl : UserControl
     {
-        public Grid TasksGrid { get; private set; }
-
-        public DeskTasksPage()
+        public TaskControl(TaskClient task)
         {
             InitializeComponent();
-            TasksGrid = tasksGrid;
+            DataContext = task;
         }
     }
 }

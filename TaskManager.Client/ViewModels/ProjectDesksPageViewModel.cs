@@ -207,7 +207,7 @@ public class ProjectDesksPageViewModel  : BindableBase
     {
         SelectedDesk = _desksViewService.GetDeskClientById(deskId);
         var page = new DeskTasksPage();
-        var context = new DeskTasksPageViewModel(_token, SelectedDesk.Model);
+        var context = new DeskTasksPageViewModel(_token, SelectedDesk.Model, page);
         _mainWindowVM.OpenPage(page, $"Tasks of {SelectedDesk.Model.Name}", context);
     }
 }

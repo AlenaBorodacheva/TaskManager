@@ -23,7 +23,7 @@
                 
                 <StackPanel Grid.Row="2" Orientation="Horizontal">
                     <TextBlock Text="Creator: " Style="{StaticResource commonTextBlock}"/>
-                    <TextBlock Text="{Binding Path=Model.Creator}" Style="{StaticResource commonTextBlock}"/>
+                    <TextBlock Text="{Binding Path=Creator}" Style="{StaticResource commonTextBlock}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Orientation="Horizontal">

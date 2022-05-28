@@ -20,6 +20,7 @@ public class DeskTasksPageViewModel : BindableBase
     private DeskModel _desk;
     private UsersRequestService _usersRequestService;
     private TasksRequestService _tasksRequestService;
+    private ProjectsRequestService _projectsRequestService;
     private CommonViewService _viewService;
     private DeskTasksPage _page;
 
@@ -61,8 +62,29 @@ public class DeskTasksPageViewModel : BindableBase
         }
     }
 
-    #endregion
+    private UserModel _selectedTaskExecutor;
 
+    public UserModel SelectedTaskExecutor
+    {
+        get => _selectedTaskExecutor; 
+        set 
+        { 
+            _selectedTaskExecutor = value;
+            RaisePropertyChanged(nameof(SelectedTaskExecutor));
+        }
+    }
+
+    private ProjectModel Project
+    {
+        get => _projectsRequestService.GetProjectById(_token, _desk.ProjectId);
+    }
+
+    public List<UserModel> AllProjectUsers
+    {
+        get => Project?.AllUsersIds?.Select(userId => _usersRequestService.GetUserById(_token, userId)).ToList();
+    }
+
+    #endregion
 
     public DelegateCommand OpenNewTaskCommand { get; private set; }
     public DelegateCommand OpenUpdateTaskCommand { get; private set; }
@@ -78,6 +100,7 @@ public class DeskTasksPageViewModel : BindableBase
         _usersRequestService = new UsersRequestService();
         _tasksRequestService = new TasksRequestService();
         _viewService = new CommonViewService();
+        _projectsRequestService = new ProjectsRequestService();
 
         TasksByColumns = GetTasksByColumns(_desk.Id);
         _page.TasksGrid.Children.Add(CreateTasksGrid());
@@ -96,7 +119,14 @@ public class DeskTasksPageViewModel : BindableBase
         var allTasks = _tasksRequestService.GetTasksByDesk(_token, deskId);
         foreach(var column in _desk.Columns)
         {
-            tasksByColumns.Add(column, allTasks.Where(t => t.Column == column).Select(t => new TaskClient(t)).ToList());
+            tasksByColumns.Add(column, allTasks.Where(t => t.Column == column).Select(t =>
+            {
+                var tV = new TaskClient(t);                
+                tV.Creator = _usersRequestService.GetCurrentUser(_token);
+                if (t.ExecutorId != null)
+                    tV.Executor = _usersRequestService.GetUserById(_token, (int)t.ExecutorId);
+                return tV;
+            }).ToList());
         }
         return tasksByColumns;
     }
@@ -164,6 +194,7 @@ public class DeskTasksPageViewModel : BindableBase
     private void CreateTask()
     {        
         SelectedTask.Model.DeskId = _desk.Id;
+        SelectedTask.Model.ExecutorId = SelectedTaskExecutor.Id;
         SelectedTask.Model.Column = _desk.Columns.FirstOrDefault();
         var resultAction = _tasksRequestService.CreateTask(_token, SelectedTask.Model);
         _viewService.ShowActionResult(resultAction, "\nNew Task is created");

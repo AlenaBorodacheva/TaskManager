@@ -15,6 +15,7 @@ public class AccountController : ControllerBase
 {
     private readonly ApplicationContext _db;
     private readonly UsersService _userService;
+    private readonly int _workTimeMinutes = 10;
 
     public AccountController(ApplicationContext db)
     {
@@ -31,6 +32,13 @@ public class AccountController : ControllerBase
         if (user != null)
             return Ok(user.ToDto());
         return NotFound();
+    }
+
+    [Authorize]
+    [HttpGet("workTime")]
+    public int GetWorkTimeInfo()
+    {
+        return _workTimeMinutes;
     }
 
     [HttpPost("token")]
@@ -50,7 +58,7 @@ public class AccountController : ControllerBase
             audience: AuthOptions.AUDIENCE,
             notBefore: now,
             claims: identity.Claims,
-            expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+            expires: now.Add(TimeSpan.FromMinutes(_workTimeMinutes)),
             signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
         var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 

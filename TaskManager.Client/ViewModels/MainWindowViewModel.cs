@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Prism.Commands;
@@ -14,6 +16,7 @@ namespace TaskManager.Client.ViewModels;
 public class MainWindowViewModel : BindableBase
 {
     private CommonViewService _viewService;
+    private  int _workTimeMinutes;
 
     #region COMMANDS
 
@@ -99,12 +102,13 @@ public class MainWindowViewModel : BindableBase
 
     #endregion
 
-    public MainWindowViewModel(AuthToken token, UserModel currentUser, Window? currentWindow = null)
+    public MainWindowViewModel(AuthToken token, UserModel currentUser, Window currentWindow, int workTimeMinutes)
     {
         _viewService = new CommonViewService();
         AuthToken = token;
         CurrentUser = currentUser;
         _currentWindow = currentWindow;
+        _workTimeMinutes = workTimeMinutes;
 
         OpenMyInfoPageCommand = new DelegateCommand(OpenMyInfoPage);
         NavigationButtons.Add(_userInfoBtnName, OpenMyInfoPageCommand);
@@ -127,6 +131,7 @@ public class MainWindowViewModel : BindableBase
         LogoutCommand = new DelegateCommand(Logout);
         NavigationButtons.Add(_logoutBtnName, LogoutCommand);
 
+        StartWork(_workTimeMinutes);
         OpenMyInfoPage();
     }
     
@@ -181,5 +186,21 @@ public class MainWindowViewModel : BindableBase
         SelectedPageName = pageName;
         SelectedPage = page;
         SelectedPage.DataContext = viewModel;
+    }
+
+    private void StopWork()
+    {
+        Login login = new Login();
+        login.Show();
+        _currentWindow.Close();
+    }
+
+    private async void StartWork(int minutes)
+    {
+        await Task.Run(() =>
+        {
+            Thread.Sleep(_workTimeMinutes * 1000);
+        });
+        StopWork();
     }
 }

@@ -66,4 +66,15 @@ public class UsersRequestService : CommonRequestService
         bool parseResult = int.TryParse(result, out int adminId);
         return parseResult? adminId : null;
     }
+
+    public int GetWorkTimeMinutes(AuthToken token)
+    {
+        var result = GetDataByUrl(HttpMethod.Get, HOST + "account/workTime", token);
+        if(!string.IsNullOrEmpty(result))
+        {
+            bool parseResult = int.TryParse(result, out int timeMinutes);
+            return parseResult ? timeMinutes : 0;
+        }
+        return 0;
+    }
 }

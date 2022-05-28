@@ -21,6 +21,7 @@ public class ProjectDesksPageViewModel  : BindableBase
     private UsersRequestService _usersRequestService;
     private ProjectModel _project;
     private DesksRequestService _desksRequestService;
+    private DesksViewService _desksViewService;
 
     private List<ModelClient<DeskModel>> _projectDesks = new List<ModelClient<DeskModel>>();
 
@@ -91,7 +92,10 @@ public class ProjectDesksPageViewModel  : BindableBase
         _usersRequestService = new UsersRequestService();
         _viewService = new CommonViewService();
         _desksRequestService = new DesksRequestService();
+        _desksViewService = new DesksViewService(_token, _desksRequestService);
+
         UpdatePage();
+
         OpenNewDeskCommand = new DelegateCommand(OpenNewDesk);
         OpenUpdateDeskCommand = new DelegateCommand<object>(OpenUpdateDesk);
         CreateOrUpdateDeskCommand = new DelegateCommand(CreateOrUpdateDesk);
@@ -112,19 +116,7 @@ public class ProjectDesksPageViewModel  : BindableBase
     public DelegateCommand<object> RemoveColumnItemCommand { get; private set; }
 
     #endregion
-
-    private List<ModelClient<DeskModel>> GetDesks()
-    {
-        var result = new List<ModelClient<DeskModel>>();
-        var desks = _desksRequestService.GetDesksByProject(_token, _project.Id);
-        if (desks != null)
-        {
-            result = desks.Select(d => new ModelClient<DeskModel>(d)).ToList();
-        }
-
-        return result;
-    }
-
+    
     private void OpenNewDesk()
     {
         SelectedDesk = new ModelClient<DeskModel>(new DeskModel());
@@ -133,27 +125,17 @@ public class ProjectDesksPageViewModel  : BindableBase
         _viewService.OpenWindow(wnd, this);
     }
 
-    private void OpenUpdateDesk(object DeskId)
+    private void OpenUpdateDesk(object deskId)
     {
-        SelectedDesk = GetDeskClientById(DeskId);
-
+        SelectedDesk = _desksViewService.GetDeskClientById(deskId);
+        if (CurrentUser.Id != SelectedDesk.Model.AdminId)
+        {
+            _viewService.ShowMessage("You are not admin!");
+            return;
+        }
         TypeActionWithDesk = ClientAction.Update;
-        var wnd = new CreateOrUpdateDeskWindow();
-        _viewService.OpenWindow(wnd, this);
-    }
-
-    private ModelClient<DeskModel> GetDeskClientById(object deskId)
-    {
-        try
-        {
-            int id = (int)deskId;
-            DeskModel desk = _desksRequestService.GetDeskById(_token, id);
-            return new ModelClient<DeskModel>(desk);
-        }
-        catch (FormatException)
-        {
-            return new ModelClient<DeskModel>(null);
-        }
+        ColumnsForNewDesk = new ObservableCollection<ColumnBindingHelp>(SelectedDesk.Model.Columns.Select(c => new ColumnBindingHelp(c)));
+        _desksViewService.OpenViewDeskInfo(deskId, this);
     }
 
     public void CreateOrUpdateDesk()
@@ -182,15 +164,13 @@ public class ProjectDesksPageViewModel  : BindableBase
 
     private void UpdateDesk()
     {
-        var resultAction = _desksRequestService.UpdateDesk(_token, SelectedDesk.Model);
-        _viewService.ShowActionResult(resultAction, "\nDesk is updated");
+        SelectedDesk.Model.Columns = ColumnsForNewDesk.Select(c => c.Value).ToArray();
+        _desksViewService.UpdateDesk(SelectedDesk.Model);
     }
 
     private void DeleteDesk()
     {
-        var resultAction = _desksRequestService.DeleteDesk(_token, SelectedDesk.Model.Id);
-        _viewService.ShowActionResult(resultAction, "\nDesk is deleted");
-
+        _desksViewService.DeleteDesk(SelectedDesk.Model.Id);
         UpdatePage();
         _viewService.CurrentOpenWindow?.Close();
     }
@@ -198,14 +178,13 @@ public class ProjectDesksPageViewModel  : BindableBase
     private void UpdatePage()
     {
         SelectedDesk = null;
-        ProjectDesks = GetDesks();
+        ProjectDesks = _desksViewService.GetDesks(_project.Id);
         _viewService.CurrentOpenWindow?.Close();
     }
 
     private void SelectPhotoForDesk()
     {
-        _viewService.SetPhotoForObject(SelectedDesk.Model);
-        SelectedDesk = new ModelClient<DeskModel>(SelectedDesk.Model);
+        SelectedDesk = _desksViewService.SelectPhotoForDesk(SelectedDesk);
     }
 
     private void AddNewColumnItem()

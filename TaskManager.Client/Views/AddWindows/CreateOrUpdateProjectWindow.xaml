@@ -80,7 +80,7 @@
                 </Button.Style>
             </Button>
             <Button Grid.Column="1" Content="Save" Command="{Binding CreateOrUpdateProjectCommand}" 
-            Style="{StaticResource commonButton}"/>
+            Style="{StaticResource commonButton}" Cursor="Hand"/>
         </Grid>
     </Grid>
 </Window>

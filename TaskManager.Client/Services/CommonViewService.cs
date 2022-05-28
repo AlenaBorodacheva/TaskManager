@@ -10,7 +10,12 @@ namespace TaskManager.Client.Services;
 public class CommonViewService
 {
     private string _imageDialogFilterPattern = "Image files (*.jpg, *.jpeg, *.jpe, *.jfif, *.png) | *.jpg; *.jpeg; *.jpe; *.jfif; *.png";
-    public Window CurrentOpenWindow { get; private set; }
+    public Window CurrentOpenWindow { get; set; }
+
+    public CommonViewService()
+    {
+
+    }
 
     public void ShowMessage(string message)
     {
@@ -51,7 +56,7 @@ public class CommonViewService
         return filePath;
     }
 
-    public void SetPhotoForObject(CommonModel model)
+    public CommonModel SetPhotoForObject(CommonModel model)
     {
         string photoPath = GetFileFromDialog(_imageDialogFilterPattern);
         if (string.IsNullOrEmpty(photoPath) == false)
@@ -59,5 +64,6 @@ public class CommonViewService
             var photoBytes = File.ReadAllBytes(photoPath);
             model.Photo = photoBytes;
         }
+        return model;
     }
 }

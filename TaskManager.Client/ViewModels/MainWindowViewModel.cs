@@ -140,8 +140,8 @@ public class MainWindowViewModel : BindableBase
 
     private void OpenDesksPage()
     {
-        SelectedPageName = _userDesksBtnName;
-        _viewService.ShowMessage(_userDesksBtnName);
+        var page = new UserDesksPage();
+        OpenPage(page, _userDesksBtnName, new UserDesksPageViewModel(AuthToken));
     }
 
     private void OpenProjectsPage()

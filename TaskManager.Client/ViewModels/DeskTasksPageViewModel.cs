@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using TaskManager.Client.Models;
 using TaskManager.Client.Services;
+using TaskManager.Client.Views.AddWindows;
 using TaskManager.Client.Views.Components;
 using TaskManager.Client.Views.Pages;
 using TaskManager.Common.Models;
@@ -35,7 +37,37 @@ public class DeskTasksPageViewModel : BindableBase
         }
     }
 
+    private TaskClient _selectedTask;
+
+    public TaskClient SelectedTask
+    {
+        get => _selectedTask; 
+        set 
+        {
+            _selectedTask = value; 
+            RaisePropertyChanged(nameof(SelectedTask));
+        }
+    }
+
+    private ClientAction _typeActionWithTask;
+
+    public ClientAction TypeActionWithTask
+    {
+        get => _typeActionWithTask;
+        set
+        {
+            _typeActionWithTask = value;
+            RaisePropertyChanged(nameof(TypeActionWithTask));
+        }
+    }
+
     #endregion
+
+
+    public DelegateCommand OpenNewTaskCommand { get; private set; }
+    public DelegateCommand OpenUpdateTaskCommand { get; private set; }
+    public DelegateCommand CreateOrUpdateTaskCommand { get; private set; }
+    public DelegateCommand DeleteTaskCommand { get; private set; }
 
     public DeskTasksPageViewModel(AuthToken token, DeskModel desk, DeskTasksPage page)
     {
@@ -49,6 +81,11 @@ public class DeskTasksPageViewModel : BindableBase
 
         TasksByColumns = GetTasksByColumns(_desk.Id);
         _page.TasksGrid.Children.Add(CreateTasksGrid());
+
+        OpenNewTaskCommand = new DelegateCommand(OpenNewTask);
+        OpenUpdateTaskCommand = new DelegateCommand(OpenUpdateTask);
+        CreateOrUpdateTaskCommand = new DelegateCommand(CreateOrUpdateTask);
+        DeleteTaskCommand = new DelegateCommand(DeleteTask);
     }
 
     #region METHODS
@@ -107,6 +144,63 @@ public class DeskTasksPageViewModel : BindableBase
         }
 
         return grid;
+    }
+
+    public void CreateOrUpdateTask()
+    {
+        if (TypeActionWithTask == ClientAction.Create)
+        {           
+            CreateTask();
+        }
+
+        if (TypeActionWithTask == ClientAction.Update)
+        {
+            UpdateTask();
+        }
+
+        UpdatePage();
+    }
+
+    private void CreateTask()
+    {        
+        SelectedTask.Model.DeskId = _desk.Id;
+        SelectedTask.Model.Column = _desk.Columns.FirstOrDefault();
+        var resultAction = _tasksRequestService.CreateTask(_token, SelectedTask.Model);
+        _viewService.ShowActionResult(resultAction, "\nNew Task is created");
+    }
+
+    private void UpdateTask()
+    {
+        _tasksRequestService.UpdateTask(_token, SelectedTask.Model);
+    }
+
+    private void DeleteTask()
+    {
+        _tasksRequestService.DeleteTask(_token, SelectedTask.Model.Id);
+        UpdatePage();
+    }
+
+    private void UpdatePage()
+    {
+        SelectedTask = null;
+        TasksByColumns = GetTasksByColumns(_desk.Id);
+        _page.TasksGrid.Children.Add(CreateTasksGrid());
+        _viewService.CurrentOpenWindow?.Close();
+    }
+
+    private void OpenNewTask()
+    {
+        TypeActionWithTask = ClientAction.Create;
+        SelectedTask = new TaskClient(new TaskModel());        
+        var wnd = new CreateOrUpdateTaskWindow();
+        _viewService.OpenWindow(wnd, this);
+    }
+
+    private void OpenUpdateTask()
+    {
+        TypeActionWithTask = ClientAction.Update;
+        var wnd = new CreateOrUpdateTaskWindow();
+        _viewService.OpenWindow(wnd, this);
     }
 
     #endregion

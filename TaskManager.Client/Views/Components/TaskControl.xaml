@@ -33,7 +33,7 @@
 
                 <StackPanel Grid.Row="4" Orientation="Horizontal">
                     <TextBlock Text="Start: " Style="{StaticResource commonTextBlock}"/>
-                    <DatePickerTextBox Text="{Binding Path=StartDate}" IsReadOnly="True"/>
+                    <DatePickerTextBox Text="{Binding Path=Model.StartDate}" IsReadOnly="True"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="5" Orientation="Horizontal">

@@ -177,7 +177,6 @@ public class ProjectDesksPageViewModel  : BindableBase
     {
         _desksViewService.DeleteDesk(SelectedDesk.Model.Id);
         UpdatePage();
-        _viewService.CurrentOpenWindow?.Close();
     }
 
     private void UpdatePage()

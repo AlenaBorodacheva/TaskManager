@@ -44,7 +44,7 @@ public class TasksRequestService : CommonRequestService
         return SendDataByUrl(HttpMethod.Patch, _tasksControllerUrl + $"/{task.Id}", token, taskJson);
     }
 
-    public HttpStatusCode DeleteTaskById(AuthToken token, int taskId)
+    public HttpStatusCode DeleteTask(AuthToken token, int taskId)
     {
         return DeleteDataByUrl(_tasksControllerUrl + $"/{taskId}", token);
     }

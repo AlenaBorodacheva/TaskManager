@@ -66,7 +66,7 @@ public class TasksRequestServiceTests
     [TestMethod()]
     public void DeleteTaskByIdTest()
     {
-        var result = _service.DeleteTaskById(_token, 7);
+        var result = _service.DeleteTask(_token, 7);
         Assert.AreEqual(HttpStatusCode.OK, result);
     }
 }

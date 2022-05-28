@@ -84,6 +84,17 @@ public class DeskTasksPageViewModel : BindableBase
         get => Project?.AllUsersIds?.Select(userId => _usersRequestService.GetUserById(_token, userId)).ToList();
     }
 
+    private string _selectedColumnName;
+    public string SelectedColumnName
+    {
+        get => _selectedColumnName;
+        set
+        {
+            _selectedColumnName = value;
+            RaisePropertyChanged(nameof(SelectedColumnName));
+        }
+    }
+
     #endregion
 
     public DelegateCommand OpenNewTaskCommand { get; private set; }
@@ -159,6 +170,15 @@ public class DeskTasksPageViewModel : BindableBase
             grid.Children.Add(header);
 
             ItemsControl columnControl = new ItemsControl();
+            columnControl.Style = resource["tasksColumnPanel"] as Style;
+            columnControl.Tag = column.Key;
+
+            columnControl.MouseEnter += new System.Windows.Input.MouseEventHandler((sender, e) =>
+            {
+                GetSelectedColumn(sender);
+            });
+            columnControl.MouseLeftButtonUp += new System.Windows.Input.MouseButtonEventHandler((sender, e) => SendTaskToNewColumn());
+
             Grid.SetRow(columnControl, 1);
             Grid.SetColumn(columnControl, columnCount);
             var tasksView = new List<TaskControl>();
@@ -166,6 +186,10 @@ public class DeskTasksPageViewModel : BindableBase
             foreach (var task in column.Value)
             {
                 var taskView = new TaskControl(task);
+                taskView.MouseDown += new System.Windows.Input.MouseButtonEventHandler((sender, e) =>
+                {
+                    SelectedTask = task;
+                });
                 tasksView.Add(taskView);
             }
             columnControl.ItemsSource = tasksView;
@@ -232,6 +256,22 @@ public class DeskTasksPageViewModel : BindableBase
         TypeActionWithTask = ClientAction.Update;
         var wnd = new CreateOrUpdateTaskWindow();
         _viewService.OpenWindow(wnd, this);
+    }
+
+    private void GetSelectedColumn(object senderControl)
+    {
+        SelectedColumnName = ((ItemsControl)senderControl).Tag.ToString();
+    }
+
+    private void SendTaskToNewColumn()
+    {
+        if(SelectedTask != null && SelectedTask.Model?.Column != SelectedColumnName)
+        {
+            SelectedTask.Model.Column = SelectedColumnName;
+            _tasksRequestService.UpdateTask(_token, SelectedTask.Model);
+            UpdatePage();
+            SelectedTask = null;
+        }
     }
 
     #endregion

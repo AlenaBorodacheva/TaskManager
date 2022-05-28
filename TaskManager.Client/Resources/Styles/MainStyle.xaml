@@ -3,8 +3,10 @@
     <Brush x:Key="commonBlueColor">#0696d7</Brush>
     <Brush x:Key="commonRedColor">Red</Brush>
     <Brush x:Key="commonGreenColor">Green</Brush>
+    <Brush x:Key="greenColor">#ddfcd7</Brush>
     <Brush x:Key="commonGrayColor">#FF8D8D8D</Brush>
-    <Brush x:Key="BlueColor">#bddeff</Brush>
+    <Brush x:Key="blueColor">#bddeff</Brush>
+    <Brush x:Key="deskColumnMouseEnterColor">#adcbd9</Brush>
     <FontStyle x:Key="commonFontStyle">Normal</FontStyle>
 
     <Style TargetType="TextBox" x:Key="commonTextBox">
@@ -105,15 +107,32 @@
     </Style>
 
     <Style TargetType="Border" x:Key="taskPanelBorder" BasedOn="{StaticResource commonPanelBorder}">
-        <Setter Property="Background" Value="{StaticResource BlueColor}"/>
+        <Setter Property="Background" Value="{StaticResource blueColor}"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Margin" Value="0,10"/>
         <Setter Property="Padding" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource greenColor}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="CheckBox" x:Key="commonChBox">
         <Setter Property="BorderBrush" Value="{StaticResource commonBlueColor}"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style TargetType="ItemsControl" x:Key="tasksColumnPanel">
+        <Setter Property="Background" Value="{StaticResource blueColor}"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="BorderBrush" Value="Gray"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="CornerRadius" Value="3"/>
+            </Style>
+        </Style.Resources>
     </Style>
     
 </ResourceDictionary>

@@ -106,6 +106,10 @@
         <Setter Property="Background" Value="#edfff2"/>
     </Style>
 
+    <Style TargetType="Border" x:Key="userBorderPanel" BasedOn="{StaticResource commonPanelBorder}">
+        <Setter Property="Width" Value="Auto"/>
+    </Style>
+
     <Style TargetType="Border" x:Key="taskPanelBorder" BasedOn="{StaticResource commonPanelBorder}">
         <Setter Property="Background" Value="{StaticResource blueColor}"/>
         <Setter Property="Cursor" Value="Hand"/>

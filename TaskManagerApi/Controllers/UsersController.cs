@@ -80,4 +80,13 @@ public class UsersController : ControllerBase
 
         return BadRequest();
     }
+
+    [AllowAnonymous]
+    [Authorize]
+    [HttpGet("{id}/admin")]
+    public ActionResult<int> GetProjectAdminId(int id)
+    {
+        var admin = _usersService.GetProjectAdmin(id);
+        return admin == null ? NotFound(null) : Ok(admin.Id);
+    }
 }

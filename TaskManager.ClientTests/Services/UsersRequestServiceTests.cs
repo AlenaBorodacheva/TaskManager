@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TaskManager.Client.Models;
 using TaskManager.Common.Models;
 
 namespace TaskManager.Client.Services.Tests;
@@ -9,6 +10,15 @@ namespace TaskManager.Client.Services.Tests;
 [TestClass()]
 public class UsersRequestServiceTests
 {
+    UsersRequestService _service;
+    AuthToken _token;
+
+    public UsersRequestServiceTests()
+    {
+        _service = new UsersRequestService();
+        _token = new AuthToken();
+    }
+
     [TestMethod()]
     public void GetTokenTest()
     {
@@ -75,5 +85,12 @@ public class UsersRequestServiceTests
         var result = service.UpdateUser(token, user);
 
         Assert.AreEqual(HttpStatusCode.OK, result);
+    }
+
+    [TestMethod()]
+    public void GetProjectUserAdminTest()
+    {
+        var id = _service.GetProjectUserAdmin(_token, 1);
+        Assert.AreEqual(1, id);
     }
 }

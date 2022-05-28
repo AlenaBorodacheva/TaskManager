@@ -59,4 +59,11 @@ public class UsersRequestService : CommonRequestService
         string userJson = JsonConvert.SerializeObject(user);
         return SendDataByUrl(HttpMethod.Patch, _usersControllerUrl + $"/{user.Id}", token, userJson);
     }
+
+    public int? GetProjectUserAdmin(AuthToken token, int userId)
+    {
+        var result = GetDataByUrl(HttpMethod.Get, _usersControllerUrl + $"/{userId}/admin", token);
+        bool parseResult = int.TryParse(result, out int adminId);
+        return parseResult? adminId : null;
+    }
 }

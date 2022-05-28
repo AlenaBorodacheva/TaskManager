@@ -41,7 +41,7 @@ public class UsersPageViewModel : BindableBase
         }
     }
 
-    private List<UserModel> _selectedUsersFromExcel;
+    private List<UserModel> _selectedUsersFromExcel = new List<UserModel>();
 
     public List<UserModel> SelectedUsersFromExcel
     {
@@ -126,6 +126,8 @@ public class UsersPageViewModel : BindableBase
     {
         TypeActionWithUser = ClientAction.Create;
         SelectedUser = new UserModel();
+        var wnd = new CreateOrUpdateUserWindow();
+        _viewService.OpenWindow(wnd, this);
     }
 
     private void DeleteUser(object userObj)
@@ -162,7 +164,8 @@ public class UsersPageViewModel : BindableBase
     private void GetUsersFromExcel()
     {
         string path = _viewService.GetFileFromDialog(_excelDialogFilterPattern);
-        UsersFromExcel = _excelService.GetAllUsersFromExcel(path);
+        if(!string.IsNullOrEmpty(path))
+            UsersFromExcel = _excelService.GetAllUsersFromExcel(path);
     }
 
     private void AddUsersFromExcel()
@@ -171,6 +174,7 @@ public class UsersPageViewModel : BindableBase
         {
             var result = _usersRequestService.CreateMultipleUsers(_token, SelectedUsersFromExcel);
             _viewService.ShowActionResult(result, "All users are created");
+            UpdatePage();
         }
     }
 

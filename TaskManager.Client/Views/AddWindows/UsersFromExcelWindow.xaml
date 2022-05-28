@@ -27,7 +27,7 @@
         <Button Content="Select EXCEL file" Command="{Binding GetUsersFromExcelCommand}" 
                 Style="{StaticResource commonButton}"/>
         <ListView Grid.Row="1" ItemsSource="{Binding UsersFromExcel}" 
-                  SelectedItem="{Binding SelectedUserFromExcelList}">
+                  SelectionChanged="ListView_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="FirstName" 
